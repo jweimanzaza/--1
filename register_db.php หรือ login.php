@@ -1,0 +1,1 @@
+$_SESSION['user_type'] = $role; // กำหนดค่า user_type ให้ตรงกับ role
