@@ -17,7 +17,7 @@ if (isset($_POST['login_user'])) {
     }
 
     if (count($errors) == 0) {
-        $password = md5($password_input); // ใช้ md5 ตามระบบเดิม (แนะนำให้เปลี่ยนในอนาคต)
+        $password = md5($password_input); // ใช้ md5 ตามระบบเดิม
         $query = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
         $results = mysqli_query($conn, $query);
 
