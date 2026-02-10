@@ -270,7 +270,7 @@ $result = $stmt->get_result();
     <div class="content-wrapper">
         <div class="status-container">
             <h2>รายการสถานะการสมัครทุนของคุณ</h2>
-            <!-- ตัวอย่างตารางสถานะ (ให้แทนที่ด้วย PHP loop จริง) -->
+            <!-- ห้ามแก้นะ -->
             <table class="status-table">
                 <thead>
                     <tr>
@@ -280,40 +280,40 @@ $result = $stmt->get_result();
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- ตัวอย่างข้อมูล -->
-                    <tr>
-                        <td>ทุนเรียนดี</td>
-                        <td>2024-04-01</td>
-                        <td><span class="status-badge status-pending">รอดำเนินการ</span></td>
-                    </tr>
-                    <tr>
-                        <td>ทุนขาดแคลนทุนทรัพย์</td>
-                        <td>2024-03-15</td>
-                        <td><span class="status-badge status-approved">อนุมัติ</span></td>
-                    </tr>
-                    <tr>
-                        <td>ทุนกิจกรรม</td>
-                        <td>2024-02-20</td>
-                        <td><span class="status-badge status-rejected">ไม่ผ่าน</span></td>
-                    </tr>
-                    <!-- /ตัวอย่างข้อมูล -->
-                    <!-- 
-                    <?php while ($row = $result->fetch_assoc()): ?>
+                    <?php 
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()): 
+                            $review_status = $row['review_status'] ?? 'pending';
+                            // เลือก field วันที่ที่มีอยู่
+                            $application_date = $row['applied_date'] ?? $row['created_at'] ?? $row['submission_date'] ?? $row['application_date'] ?? date('Y-m-d');
+                    ?>
                         <tr>
                             <td><?= htmlspecialchars($row['scholarship_name']); ?></td>
-                            <td><?= htmlspecialchars($row['applied_date']); ?></td>
+                            <td><?= htmlspecialchars(substr($application_date, 0, 10)); ?></td>
                             <td>
-                                <?php if ($row['status'] == 'pending'): ?>
-                                    <span class="status-badge status-pending">รอดำเนินการ</span>
-                                <?php elseif ($row['status'] == 'approved'): ?>
-                                    <span class="status-badge status-approved">อนุมัติ</span>
-                                <?php else: ?>
-                                    <span class="status-badge status-rejected">ไม่ผ่าน</span>
-                                <?php endif; ?>
+                                <?php 
+                                if ($row['final_status']) {
+                                    if ($row['final_status'] == 'ได้รับทุนการศึกษา') {
+                                        echo '<span class="status-badge status-approved">อนุมัติ</span>';
+                                    } else {
+                                        echo '<span class="status-badge status-rejected">ไม่ผ่าน</span>';
+                                    }
+                                } elseif ($review_status == 'อนุมัติ') {
+                                    echo '<span class="status-badge status-approved">อนุมัติ</span>';
+                                } elseif ($review_status == 'ไม่อนุมัติ') {
+                                    echo '<span class="status-badge status-rejected">ไม่ผ่าน</span>';
+                                } else {
+                                    echo '<span class="status-badge status-pending">รอดำเนินการ</span>';
+                                }
+                                ?>
                             </td>
                         </tr>
-                    <?php endwhile; ?>
-                    -->
+                    <?php 
+                        endwhile; 
+                    } else {
+                        echo '<tr><td colspan="3" style="text-align:center;color:#9ca3af;">ยังไม่มีการสมัครทุน</td></tr>';
+                    }
+                    ?>
                 </tbody>
             </table>
         </div>
