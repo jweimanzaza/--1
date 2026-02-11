@@ -18,9 +18,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 $profile = $result->fetch_assoc();
 
-if (!$profile) {
-    die("ไม่พบข้อมูลโปรไฟล์");
-}
+$profileNotFound = !$profile;
 ?>
 
 <!DOCTYPE html>
@@ -235,6 +233,27 @@ if (!$profile) {
     <!-- Content Wrapper -->
     <div class="content-wrapper">
         <div class="profile-container">
+            <?php if ($profileNotFound): ?>
+                <!-- Error State UI -->
+                <div style="text-align: center; padding: 48px 24px;">
+                    <div style="font-size: 80px; margin-bottom: 20px; opacity: 0.3;">📋</div>
+                    <h2 style="color: #64748b; font-size: 1.8rem; margin: 0 0 12px 0; font-weight: 600;">
+                        ไม่พบข้อมูลโปรไฟล์
+                    </h2>
+                    <p style="color: #94a3b8; font-size: 1.08rem; margin: 0 0 28px 0; line-height: 1.6;">
+                        ดูเหมือนว่าข้อมูลโปรไฟล์ของคุณยังไม่ได้ถูกสร้าง<br>
+                        กรุณาคลิกปุ่มด้านล่างเพื่อเริ่มสร้างข้อมูลโปรไฟล์
+                    </p>
+                    <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                        <a href="edit_profile.php" style="background: linear-gradient(90deg, #2563eb 0%, #1d4ed8 100%); color: #fff !important; padding: 12px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1.02rem; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 2px 8px rgba(37,99,235,0.15);">
+                            <i class="fa fa-plus"></i> สร้างข้อมูลโปรไฟล์
+                        </a>
+                        <a href="student_dashboard.php" style="background: #f1f5f9; color: #475569 !important; padding: 12px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1.02rem; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; border: 2px solid #cbd5e1;">
+                            <i class="fa fa-home"></i> กลับหน้าหลัก
+                        </a>
+                    </div>
+                </div>
+            <?php else: ?>
             <h2>ข้อมูลส่วนตัว</h2>
             <p><strong>ชื่อ:</strong> <?= htmlspecialchars($profile['first_name']); ?></p>
             <p><strong>นามสกุล:</strong> <?= htmlspecialchars($profile['last_name']); ?></p>
@@ -280,6 +299,7 @@ if (!$profile) {
             <p><strong>สถานะ:</strong> <?= htmlspecialchars($profile['parent_status']); ?></p>
 
             <a href="edit_profile.php" class="btn btn-edit">แก้ไขข้อมูล</a>
+            <?php endif; ?>
         </div>
     </div>
 </body>
